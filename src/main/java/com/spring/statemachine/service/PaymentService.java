@@ -11,6 +11,8 @@ public interface PaymentService {
 
     StateMachine<PaymentState, PaymentEvent> preAuthorization(Long paymentId);
 
+    StateMachine<PaymentState, PaymentEvent> preAuthorizationApproved(Long paymentId);
+
     StateMachine<PaymentState, PaymentEvent> approvePaymentAuthorization(Long paymentId);
 
     StateMachine<PaymentState, PaymentEvent> declinePaymentAuthorization(Long paymentId);

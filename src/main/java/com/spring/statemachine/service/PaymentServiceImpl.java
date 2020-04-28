@@ -40,6 +40,14 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public StateMachine<PaymentState, PaymentEvent> preAuthorization(Long paymentId) {
         StateMachine<PaymentState, PaymentEvent> stateMachine = build(paymentId);
+        sendEventToStateMachine(paymentId, stateMachine, PaymentEvent.PRE_AUTHORIZE);
+        return stateMachine;
+    }
+
+    @Transactional
+    @Override
+    public StateMachine<PaymentState, PaymentEvent> preAuthorizationApproved(Long paymentId) {
+        StateMachine<PaymentState, PaymentEvent> stateMachine = build(paymentId);
         sendEventToStateMachine(paymentId, stateMachine, PaymentEvent.PRE_AUTHORIZE_APPROVED);
         return stateMachine;
     }

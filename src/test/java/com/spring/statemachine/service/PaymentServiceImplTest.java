@@ -39,7 +39,21 @@ class PaymentServiceImplTest {
         PaymentEntity preAuthorizedPayment = paymentRepository.getOne(newPaymentCreated.getId());
 
         Assertions.assertNotNull(preAuthorizedPayment);
+        Assertions.assertEquals(stateMachine.getState().getId(), PaymentState.NEW);
+        Assertions.assertEquals(preAuthorizedPayment.getPaymentState(), PaymentState.NEW);
+    }
+
+    @Test
+    @Transactional
+    public void preAuthorizationApproved() {
+        PaymentEntity newPaymentCreated = paymentService.newPayment(this.paymentEntity);
+        StateMachine<PaymentState, PaymentEvent> stateMachine = paymentService.preAuthorizationApproved(newPaymentCreated.getId());
+
+        PaymentEntity preAuthorizedPayment = paymentRepository.getOne(newPaymentCreated.getId());
+
+        Assertions.assertNotNull(preAuthorizedPayment);
         Assertions.assertEquals(stateMachine.getState().getId(), PaymentState.PRE_AUTH);
         Assertions.assertEquals(preAuthorizedPayment.getPaymentState(), PaymentState.PRE_AUTH);
     }
+
 }
