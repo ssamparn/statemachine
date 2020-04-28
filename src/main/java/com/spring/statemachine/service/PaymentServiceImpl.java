@@ -11,6 +11,7 @@ import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -28,31 +29,35 @@ public class PaymentServiceImpl implements PaymentService {
         this.paymentStateChangeInceptor = paymentStateChangeInceptor;
     }
 
+    @Transactional
     @Override
     public PaymentEntity newPayment(PaymentEntity paymentEntity) {
         paymentEntity.setPaymentState(PaymentState.NEW);
         return paymentRepository.save(paymentEntity);
     }
 
+    @Transactional
     @Override
     public StateMachine<PaymentState, PaymentEvent> preAuthorization(Long paymentId) {
         StateMachine<PaymentState, PaymentEvent> stateMachine = build(paymentId);
-        sendEventToStateMachine(paymentId, stateMachine, PaymentEvent.PRE_AUTHORIZE);
-        return null;
+        sendEventToStateMachine(paymentId, stateMachine, PaymentEvent.PRE_AUTHORIZE_APPROVED);
+        return stateMachine;
     }
 
+    @Transactional
     @Override
     public StateMachine<PaymentState, PaymentEvent> approvePaymentAuthorization(Long paymentId) {
         StateMachine<PaymentState, PaymentEvent> stateMachine = build(paymentId);
         sendEventToStateMachine(paymentId, stateMachine, PaymentEvent.AUTH_APPROVED);
-        return null;
+        return stateMachine;
     }
 
+    @Transactional
     @Override
     public StateMachine<PaymentState, PaymentEvent> declinePaymentAuthorization(Long paymentId) {
         StateMachine<PaymentState, PaymentEvent> stateMachine = build(paymentId);
         sendEventToStateMachine(paymentId, stateMachine, PaymentEvent.AUTH_DECLINED);
-        return null;
+        return stateMachine;
     }
 
     private StateMachine<PaymentState, PaymentEvent> build(Long paymentId) {
