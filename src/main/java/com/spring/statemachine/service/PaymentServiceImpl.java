@@ -4,7 +4,9 @@ import com.spring.statemachine.domain.PaymentEvent;
 import com.spring.statemachine.domain.PaymentState;
 import com.spring.statemachine.entity.PaymentEntity;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PaymentServiceImpl implements PaymentService {
 
     @Override
